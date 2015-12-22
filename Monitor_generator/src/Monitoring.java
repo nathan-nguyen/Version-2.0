@@ -87,6 +87,8 @@ public class Monitoring {
 		policyObjectCount++;
 		policyObjects.add("call_privileged");
 		policyObjectCount++;
+		policyObjects.add("imei");
+		policyObjectCount++;
 		for (int i = 0; i < policy_list.objectCount; i++) {
 			// Object with fix localAppUID should not be added
 			try{

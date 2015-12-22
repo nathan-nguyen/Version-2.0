@@ -37,6 +37,7 @@ typedef struct tHistory {
 #define CONTACT_UID 1103
 #define HANGUP_UID 1104
 #define CALL_PRIVILEGED_UID 1105
+#define IMEI_UID 1106
 
 int LogicDroid_Module_initializeMonitor(int *UID, int appCount);
 

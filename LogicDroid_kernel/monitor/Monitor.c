@@ -259,7 +259,7 @@ int (*functionPointer[11])(History * next, History * prev, int recordIdx);
 
 // Initialize the Monitor
 int LogicDroid_Module_initializeMonitor(int *UID, int appCount) {
-  int appIdx = 7;
+  int appIdx = 8;
   int i, j, k;
 
   mutex_lock(&lock);
@@ -272,7 +272,8 @@ int LogicDroid_Module_initializeMonitor(int *UID, int appCount) {
   mapping[CONTACT_UID] = 4;
   mapping[HANGUP_UID] = 5;
   mapping[CALL_PRIVILEGED_UID] = 6;
-  app_num = appCount + 7;
+  mapping[IMEI_UID] = 7;
+  app_num = appCount + 8;
 
   staticAtoms = (char**) kmalloc(sizeof(char*) * numberOfStaticAtoms, GFP_KERNEL);
   for (i = 0; i < numberOfStaticAtoms; i++) {
