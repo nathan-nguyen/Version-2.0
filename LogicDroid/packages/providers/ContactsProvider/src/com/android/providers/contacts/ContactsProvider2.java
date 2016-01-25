@@ -175,7 +175,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
-// hack - hendra
+// LogicDroid - Hendra
 import android.pem.Monitor;
 import android.pem.PrivilegeEscalationException;
 
@@ -4701,7 +4701,7 @@ public class ContactsProvider2 extends AbstractContactsProvider
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
             String sortOrder, CancellationSignal cancellationSignal) {
 
-	// hack - hendra
+	// LogicDroid - Hendra
 	// #########################################################################
 	// #                    Hook on Accessing Contact Database                 #
 	// #########################################################################

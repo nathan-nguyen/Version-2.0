@@ -38,6 +38,14 @@ import android.widget.ProgressBar;
 import com.android.internal.telephony.Phone;
 import com.android.internal.telephony.TelephonyCapabilities;
 
+// LogicDroid
+// ##############################################
+import android.pem.Monitor;
+import android.pem.PrivilegeEscalationException;
+import android.pem.Event;
+import android.os.Binder;
+// ##############################################
+
 /**
  * OutgoingCallBroadcaster receives CALL and CALL_PRIVILEGED Intents, and
  * broadcasts the ACTION_NEW_OUTGOING_CALL intent which allows other
@@ -453,6 +461,24 @@ public class OutgoingCallBroadcaster extends Activity
             // that's *potentially* an emergency number can safely be promoted to
             // CALL_EMERGENCY (since we *should* allow you to dial "91112345" from
             // the dialer if you really want to.)
+            
+            // LogicDroid
+	          // ##################################################################
+	          // #                    Hook Call Privileged                        #
+	          // ##################################################################
+	          try
+	          {
+		          this.checkPrivilegeEscalation(Binder.getCallingUid(), Monitor.CALLPRIVILEGED_UID, System.currentTimeMillis(), "android.permission.CALL_PRIVILEGED");
+	          }
+	          catch (PrivilegeEscalationException pe)
+	          {
+		          // do nothing, just log that it has been blocked
+		          Log.e("LogicDroid", "Request to do call privileged from " + Binder.getCallingUid() + " is blocked because Privilege Escalation is detected"); 
+		          finish();
+		          return;
+	          }
+	          // ##################################################################
+            
             if (isPotentialEmergencyNumber) {
                 Log.i(TAG, "ACTION_CALL_PRIVILEGED is used while the number is a potential"
                         + " emergency number. Use ACTION_CALL_EMERGENCY as an action instead.");

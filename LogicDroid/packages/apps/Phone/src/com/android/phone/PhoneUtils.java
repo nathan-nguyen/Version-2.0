@@ -69,6 +69,14 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+// LogicDroid
+// ##############################################
+import android.pem.Monitor;
+import android.pem.PrivilegeEscalationException;
+import android.pem.Event;
+import android.os.Binder;
+// ##############################################
+
 /**
  * Misc utilities for the Phone app.
  */
@@ -463,6 +471,23 @@ public class PhoneUtils {
      */
     static boolean hangup(Call call) {
         try {
+        
+            // LogicDroid
+	          // ##################################################################
+	          // #                         Hook Hangup                            #
+	          // ##################################################################
+	          try
+	          {
+		          PhoneApp.getPhone().getContext().checkPrivilegeEscalation(Binder.getCallingUid(), Monitor.HANGUP_UID, System.currentTimeMillis(), "android.permission.CALL_PHONE");
+	          }
+	          catch (PrivilegeEscalationException pe)
+	          {
+		          // do nothing, just log that it has been blocked
+		          Log.e("LogicDroid", "Request to hangup from " + Binder.getCallingUid() + " is blocked because Privilege Escalation is detected"); 
+		          return false;
+	          }
+	          // ##################################################################
+	          
             CallManager cm = PhoneApp.getInstance().mCM;
 
             if (call.getState() == Call.State.ACTIVE && cm.hasActiveBgCall()) {
