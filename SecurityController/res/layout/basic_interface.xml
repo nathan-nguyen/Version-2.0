@@ -1,0 +1,225 @@
+<ScrollView	xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="ntu.fyp.sjy.securitycontroller.MainActivity" >
+        
+    <LinearLayout
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:focusableInTouchMode="true">
+            
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+	       		android:id="@+id/transferable"
+	            android:layout_width="wrap_content"
+	            android:layout_height="match_parent"
+	            android:text="@string/transferable"
+	            android:layout_marginTop="10dp" />
+	            
+			<CheckBox
+				android:id="@+id/transferable_check"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:layout_marginLeft="70dp"
+				android:onClick="transferableCheck" />
+        </LinearLayout>
+       	
+		<TextView
+            android:id="@+id/time_interval_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/timeinterval"
+            android:layout_marginTop="10dp"/>
+            
+		<LinearLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal"
+		    android:layout_marginTop="10dp">
+		
+		    <EditText
+				android:id="@+id/time_interval_input"
+	            android:layout_width="180dp"
+	            android:layout_height="40dp"
+	            android:maxLines="1"
+	            android:inputType="numberDecimal"
+	            android:text="@string/default_time_interval"/> 
+            
+		    <Button
+		        android:id="@+id/time_submit"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/submit"
+		        android:onClick="timeSubmit"/>
+		        
+		</LinearLayout>	
+			         
+		<LinearLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal"
+		    android:layout_marginTop="20dp">
+		    <TextView 
+				android:id="@+id/internet_text" 
+				android:layout_width="60dp" 
+				android:layout_height="wrap_content" 
+				android:text="@string/internet"/>
+		    
+		    <Switch 
+				android:id="@+id/internet_switch" 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content" 
+				android:layout_marginLeft="90dp"
+				android:onClick="internetToggle"/>
+		</LinearLayout>
+		
+			
+		<ntu.fyp.sjy.securitycontroller.MyGridView
+			android:id="@+id/internet_grid"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:numColumns="1"/>
+			
+		<LinearLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal"
+		    android:layout_marginTop="20dp">
+		    <TextView 
+				android:id="@+id/contact_text" 
+				android:layout_width="60dp" 
+			    android:layout_height="wrap_content" 
+			    android:text="@string/contact"/>
+		    
+		    <Switch 
+				android:id="@+id/contact_switch" 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content" 
+				android:layout_marginLeft="90dp"
+				android:onClick = "contactToggle"/>
+		</LinearLayout>	
+			
+		<ntu.fyp.sjy.securitycontroller.MyGridView
+		    android:id="@+id/contact_grid"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:numColumns="1"/>
+			
+		<LinearLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal"
+		    android:layout_marginTop="20dp">
+		    <TextView 
+			    android:id="@+id/location_text" 
+			    android:layout_width="60dp" 
+			    android:layout_height="wrap_content" 
+			    android:text="@string/location"/>
+			    
+			<Switch 
+			    android:id="@+id/location_switch" 
+			    android:layout_width="wrap_content" 
+			    android:layout_height="wrap_content"
+			    android:layout_marginLeft="90dp"
+			    android:onClick = "locationToggle"/>
+		</LinearLayout>
+		
+		<ntu.fyp.sjy.securitycontroller.MyGridView
+		    android:id="@+id/location_grid"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:numColumns="1"/>
+		
+		<LinearLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal"
+		    android:layout_marginTop="20dp">
+			
+		    <TextView 
+			    android:id="@+id/imei_text" 
+			    android:layout_width="60dp" 
+			    android:layout_height="wrap_content"
+			    android:text="@string/imei"/>
+			    
+			    <Switch 
+			    android:id="@+id/imei_switch" 
+			    android:layout_width="wrap_content" 
+			    android:layout_height="wrap_content"
+			    android:layout_marginLeft="90dp"
+			    android:onClick = "imeiToggle"/>
+		    
+		</LinearLayout>	
+		
+		<ntu.fyp.sjy.securitycontroller.MyGridView
+		    android:id="@+id/imei_grid"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:numColumns="1"/>
+		
+		<LinearLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal"
+		    android:layout_marginTop="20dp">
+			    
+		    <TextView 
+			    android:id="@+id/sms_text" 
+			    android:layout_width="60dp" 
+			    android:layout_height="wrap_content" 
+			    android:text="@string/sms"/>
+			    
+		    <Switch 
+			    android:id="@+id/sms_switch" 
+			    android:layout_width="wrap_content" 
+			    android:layout_height="wrap_content"
+			    android:layout_marginLeft="90dp"
+			    android:onClick = "smsToggle"/>
+		</LinearLayout>
+		    
+		<ntu.fyp.sjy.securitycontroller.MyGridView
+		    android:id="@+id/sms_grid"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:numColumns="1"/>
+		
+		<LinearLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal"
+		    android:layout_marginTop="20dp">
+			    
+		    <TextView 
+			    android:id="@+id/call_privileged_text" 
+			    android:layout_width="60dp" 
+			    android:layout_height="wrap_content" 
+			    android:text="@string/call"/>
+			    
+		    <Switch 
+			    android:id="@+id/call_privileged_switch" 
+			    android:layout_width="wrap_content" 
+			    android:layout_height="wrap_content"
+			    android:layout_marginLeft="90dp"
+			    android:onClick = "callToggle"/>
+		</LinearLayout>
+		    
+		<ntu.fyp.sjy.securitycontroller.MyGridView
+		    android:id="@+id/call_privileged_grid"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:numColumns="1"/>
+    
+    </LinearLayout>
+		
+</ScrollView>
+
