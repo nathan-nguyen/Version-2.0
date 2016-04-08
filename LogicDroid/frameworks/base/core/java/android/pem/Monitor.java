@@ -63,7 +63,7 @@ public class Monitor{
 
   public boolean isVirtualUID(int UID)
   {
-    if (UID == ROOT_UID|| UID == INTERNET_UID|| UID == SMS_UID|| UID == LOCATION_UID|| UID == CONTACT_UID || UID == HANGUP_UID || UID == CALLPRIVILEGED_UID)
+    if (UID == ROOT_UID|| UID == INTERNET_UID|| UID == SMS_UID|| UID == LOCATION_UID|| UID == CONTACT_UID || UID == HANGUP_UID || UID == CALLPRIVILEGED_UID || UID == IMEI_UID)
       return true;
     return false;
   }

@@ -468,7 +468,7 @@ void policy_data_cleanup(void) {
 // (*) The above functions are used inside History_Process()
 //***********************************************************************************************************************************************//
 
-// EXIST - ID = 0
+// EXIST - ID = 0 - Need optimization
 int exist_function(History *next, History *prev, int recordIdx){
   int freeVarNo = dependencyTable[recordIdx].freeVarNo;
   int policyNo, currIdx, subIdx, mainLoopsNo, i, firstCalIdx;
@@ -485,8 +485,8 @@ int exist_function(History *next, History *prev, int recordIdx){
     firstCalIdx = freeVarCal(freeVarNo, i, dependencyTable[recordIdx].varIdx[0]);
     next->propositions[policyNo][currIdx][firstCalIdx] = next->propositions[policyNo][currIdx][firstCalIdx] || next->propositions[policyNo][subIdx][freeVarCal(freeVarNo, i, dependencyTable[recordIdx].varIdx[1])];
 
-    if (next->propositions[policyNo][currIdx][firstCalIdx])
-      return 0;
+    //if (next->propositions[policyNo][currIdx][firstCalIdx])
+    //  return 0;
   }
   return 0;
 }
@@ -544,7 +544,7 @@ int not_function(History *next, History *prev, int recordIdx){
   return 0;
 }
 
-// FOR ALL - ID = 4
+// FOR ALL - ID = 4 - Need Optimization
 int forall_function(History *next, History *prev, int recordIdx){
   int freeVarNo = dependencyTable[recordIdx].freeVarNo;
   int policyNo, currIdx, subIdx, mainLoopsNo, i, firstCalIdx;
@@ -558,8 +558,8 @@ int forall_function(History *next, History *prev, int recordIdx){
   for (i = 0; i < mainLoopsNo; i ++){
     firstCalIdx = freeVarCal(freeVarNo, i, dependencyTable[recordIdx].varIdx[0]);
     next->propositions[policyNo][currIdx][firstCalIdx] = next->propositions[policyNo][currIdx][firstCalIdx] && next->propositions[policyNo][subIdx][freeVarCal(freeVarNo, i, dependencyTable[recordIdx].varIdx[1])];
-    if (!next->propositions[policyNo][currIdx][firstCalIdx])
-      return 0;
+    //if (!next->propositions[policyNo][currIdx][firstCalIdx])
+    //  return 0;
   }
   return 0;
 }
