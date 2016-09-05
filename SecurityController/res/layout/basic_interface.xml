@@ -79,8 +79,8 @@
 				android:id="@+id/internet_switch" 
 				android:layout_width="wrap_content" 
 				android:layout_height="wrap_content" 
-				android:layout_marginLeft="90dp"
-				android:onClick="internetToggle"/>
+				android:layout_marginLeft="90dp"/>
+		    
 		</LinearLayout>
 		
 			
@@ -105,8 +105,7 @@
 				android:id="@+id/contact_switch" 
 				android:layout_width="wrap_content" 
 				android:layout_height="wrap_content" 
-				android:layout_marginLeft="90dp"
-				android:onClick = "contactToggle"/>
+				android:layout_marginLeft="90dp"/>
 		</LinearLayout>	
 			
 		<ntu.fyp.sjy.securitycontroller.MyGridView
@@ -130,8 +129,7 @@
 			    android:id="@+id/location_switch" 
 			    android:layout_width="wrap_content" 
 			    android:layout_height="wrap_content"
-			    android:layout_marginLeft="90dp"
-			    android:onClick = "locationToggle"/>
+			    android:layout_marginLeft="90dp"/>
 		</LinearLayout>
 		
 		<ntu.fyp.sjy.securitycontroller.MyGridView
@@ -156,8 +154,7 @@
 			    android:id="@+id/imei_switch" 
 			    android:layout_width="wrap_content" 
 			    android:layout_height="wrap_content"
-			    android:layout_marginLeft="90dp"
-			    android:onClick = "imeiToggle"/>
+			    android:layout_marginLeft="90dp"/>
 		    
 		</LinearLayout>	
 		
@@ -183,8 +180,7 @@
 			    android:id="@+id/sms_switch" 
 			    android:layout_width="wrap_content" 
 			    android:layout_height="wrap_content"
-			    android:layout_marginLeft="90dp"
-			    android:onClick = "smsToggle"/>
+			    android:layout_marginLeft="90dp"/>
 		</LinearLayout>
 		    
 		<ntu.fyp.sjy.securitycontroller.MyGridView
@@ -209,8 +205,7 @@
 			    android:id="@+id/call_privileged_switch" 
 			    android:layout_width="wrap_content" 
 			    android:layout_height="wrap_content"
-			    android:layout_marginLeft="90dp"
-			    android:onClick = "callToggle"/>
+			    android:layout_marginLeft="90dp"/>
 		</LinearLayout>
 		    
 		<ntu.fyp.sjy.securitycontroller.MyGridView

@@ -34,8 +34,7 @@
 				android:id="@+id/contact_source_switch" 
 			    android:layout_width="wrap_content" 
 			    android:layout_height="wrap_content"     
-				android:layout_marginLeft="90dp"
-			    android:onClick="contactSourceToggle"/>
+				android:layout_marginLeft="90dp"/>
 	    </LinearLayout>
 		
 		<ntu.fyp.sjy.securitycontroller.MyGridView
@@ -62,8 +61,7 @@
 				android:id="@+id/location_source_switch" 
 			    android:layout_width="wrap_content" 
 			    android:layout_height="wrap_content"   
-				android:layout_marginLeft="90dp"
-			    android:onClick="locationSourceToggle"/>
+				android:layout_marginLeft="90dp"/>
 		</LinearLayout>
 						
 		
@@ -89,8 +87,7 @@
 				android:id="@+id/imei_source_switch" 
 			    android:layout_width="wrap_content" 
 			    android:layout_height="wrap_content"
-				android:layout_marginLeft="90dp"
-			    android:onClick="imeiSourceToggle"/>  
+				android:layout_marginLeft="90dp"/>  
 		</LinearLayout>
 	    
 						
@@ -117,8 +114,7 @@
 				android:id="@+id/sms_source_switch" 
 			    android:layout_width="wrap_content" 
 			    android:layout_height="wrap_content"
-				android:layout_marginLeft="90dp" 
-			    android:onClick="smsSourceToggle"/>   
+				android:layout_marginLeft="90dp"/>   
 		</LinearLayout>
 
 		<ntu.fyp.sjy.securitycontroller.MyGridView

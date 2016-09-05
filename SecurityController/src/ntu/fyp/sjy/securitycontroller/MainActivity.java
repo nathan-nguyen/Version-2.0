@@ -61,8 +61,12 @@ public class MainActivity extends FragmentActivity {
     //advancedList to store the resources set to be protected in advanced interface
     ArrayList<String> advancedList = new ArrayList<String>();
     
+    //advancedSinkList to store the sink to be checked in advanced interface
     final ArrayList<String> advancedSinkList = new ArrayList<String>();
+    
+    //Add sinkItem is Advanced Interface here
     final CharSequence[] sinkItems = {"Internet", "Sms"};
+    
     private boolean[] mulchoice = new boolean[sinkItems.length];
     
     Boolean transCheck = false;
@@ -177,7 +181,7 @@ public class MainActivity extends FragmentActivity {
 		String switchbutton = target.concat("_switch");
 		int id = getResources().getIdentifier(switchbutton, "id", "ntu.fyp.sjy.securitycontroller");
 		final Switch switchBtn = (Switch) findViewById(id);
-
+		
 		//get the corresponding gridview of the button
 		String gridview = target.concat("_grid");
 		int idView = getResources().getIdentifier(gridview, "id", "ntu.fyp.sjy.securitycontroller");
