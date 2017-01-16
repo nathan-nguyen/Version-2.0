@@ -35,9 +35,10 @@ int LogicDroid_getInternetUID(void) {
 
 History **hist = NULL;
 
-// #######################################################################################
-// #                            Interface to System Calls                                #
-// #######################################################################################
+//*******************************************************************************************************************************//
+// [INTERFACE TO SYSTEM CALLS]
+//*******************************************************************************************************************************//
+
 asmlinkage int sys_LogicDroid_checkChain(int policyID, int caller, int target) {
   int UID[2] = {caller, target};
   int result;
@@ -83,7 +84,7 @@ asmlinkage void sys_LogicDroid_registerMonitor(char __user *inputString, char __
 asmlinkage void sys_LogicDroid_unregisterMonitor(void) {
   LogicDroid_unregisterMonitor();
 }
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 
 int LogicDroid_renewMonitorVariable(int *UID, int varCount, char value, int rel) {
   int varIdx = 0;
@@ -110,8 +111,7 @@ int LogicDroid_initializeMonitor(int __user *UID, int appCount) {
   localUID = (int*) kmalloc(sizeof(int) * localAppCount, GFP_KERNEL);
   copy_from_user(localUID, UID, sizeof(int) * localAppCount);
 
-  if (notInitialized)
-    return NO_MONITOR;
+  if (notInitialized) return NO_MONITOR;
 
   return LogicDroid_Module_initializeMonitor(UID, appCount);
 }
@@ -123,8 +123,7 @@ int LogicDroid_checkEvent(int rel, int *UID, int varCount, long timestamp) {
   char result;
 
   // Block the direct call from /net/socket.c
-  if (notInitialized)
-    return NO_MONITOR;
+  if (notInitialized) return NO_MONITOR;
 
   mutex_lock(&lock);
   History_Reset(hist[!currentHist]);
@@ -154,11 +153,9 @@ int LogicDroid_checkEvent(int rel, int *UID, int varCount, long timestamp) {
 }
 
 int LogicDroid_getRelationName(int ID, char __user *relationName) {
-  if (ID < 0 || ID >= relationSize)
-    return OUT_OF_BOUND;
+  if (ID < 0 || ID >= relationSize) return OUT_OF_BOUND;
 
-  if (notInitialized)
-    return NO_MONITOR;
+  if (notInitialized) return NO_MONITOR;
 
   strcpy(relationName, relations[ID]);
 
@@ -222,31 +219,31 @@ void LogicDroid_unregisterMonitor() {
   printk("\nUnregister Monitor\n");
   notInitialized = 1;
 }
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 
 static int num_temp;
 static int time_tag_size;
 
 static char **staticAtoms;
-static int numberOfStaticAtoms = 0;							// Number of static atoms
-int numberOfAtoms;									// Number of all atoms (static + dynamic)
-int numberOfFormulas;									// Number of formulas
+static int numberOfStaticAtoms = 0;			// Number of static atoms
+int numberOfAtoms;					// Number of all atoms (static + dynamic)
+int numberOfFormulas;					// Number of formulas
 
 int * secondIndexSize;
 
-int numberOfResourceAllocationRecords;							// Number of Resource Allocation Record
-ResourceAllocationRecord * resourceAllocationTable;					// Resource Allocation Table is an array of Resource Allocation Records
-Atom * atomList;									// List of all atoms
+int numberOfResourceAllocationRecords;			// Number of Resource Allocation Record
+ResourceAllocationRecord * resourceAllocationTable;	// Resource Allocation Table is an array of Resource Allocation Records
+Atom * atomList;					// List of all atoms
 
-static int dependencyTableRecordNo = 0;							// Number of records in dependency table
+static int dependencyTableRecordNo = 0;			// Number of records in dependency table
 DependencyTableRecord * dependencyTable;
 
 // Function pointer (used in History_Process)
 int (*functionPointer[11])(History * next, History * prev, int recordIdx);
 
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 // [MAIN MONITOR FUNCTIONS]
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 // (*) int LogicDroid_Module_renewMonitorVariable(int *UID, int varCount, char value, int rel)
 // (*) int LogicDroid_Module_initializeMonitor(int *UID, int appCount)
 // (*) int LogicDroid_Module_checkEvent(int rel, int *UID, int varCount, long timestamp)
@@ -255,7 +252,7 @@ int (*functionPointer[11])(History * next, History * prev, int recordIdx);
 // (*) void History_insertEvent(History *h, int rel, int idx)
 // (*) void History_Dispose(History *h)
 // (*) char History_Process(History *next, History *prev)
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 
 // Initialize the Monitor
 int LogicDroid_Module_initializeMonitor(int *UID, int appCount) {
@@ -277,7 +274,9 @@ int LogicDroid_Module_initializeMonitor(int *UID, int appCount) {
 
   staticAtoms = (char**) kmalloc(sizeof(char*) * numberOfStaticAtoms, GFP_KERNEL);
   for (i = 0; i < numberOfStaticAtoms; i++) {
-    //TODO: static atoms size app_num ?
+    // TODO: static atoms size app_num
+    // All the static atoms is one dimension array because of the all relations are singular relation
+    // Static atoms size need to be defined independently
     staticAtoms[i] = (char*) kmalloc(sizeof(char) * app_num, GFP_KERNEL);
     memset(staticAtoms[i], 0, sizeof(char) * app_num);
   }
@@ -450,9 +449,11 @@ void policy_data_cleanup(void) {
   kfree(atomList);
 }
 
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 // [POLICY EXECUTION FUNCTIONS]
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
+// (*) The below functions are used inside History_Process()
+// --
 // (*) int exist_function(History *next, History *prev, int recordIdx)
 // (*) int and_function(History *next, History *prev, int recordIdx)
 // (*) int or_function(History *next, History *prev, int recordIdx)
@@ -464,9 +465,7 @@ void policy_data_cleanup(void) {
 // (*) int diamond_function(History *next, History *prev, int recordIdx)
 // (*) int since_metric_function(History *next, History *prev, int recordIdx)
 // (*) int since_function(History *next, History *prev, int recordIdx)
-// --
-// (*) The above functions are used inside History_Process()
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 
 // EXIST - ID = 0 - Need optimization
 int exist_function(History *next, History *prev, int recordIdx){
@@ -484,9 +483,6 @@ int exist_function(History *next, History *prev, int recordIdx){
   for (i = 0; i < mainLoopsNo; i ++){
     firstCalIdx = freeVarCal(freeVarNo, i, dependencyTable[recordIdx].varIdx[0]);
     next->propositions[policyNo][currIdx][firstCalIdx] = next->propositions[policyNo][currIdx][firstCalIdx] || next->propositions[policyNo][subIdx][freeVarCal(freeVarNo, i, dependencyTable[recordIdx].varIdx[1])];
-
-    //if (next->propositions[policyNo][currIdx][firstCalIdx])
-    //  return 0;
   }
   return 0;
 }
@@ -558,8 +554,6 @@ int forall_function(History *next, History *prev, int recordIdx){
   for (i = 0; i < mainLoopsNo; i ++){
     firstCalIdx = freeVarCal(freeVarNo, i, dependencyTable[recordIdx].varIdx[0]);
     next->propositions[policyNo][currIdx][firstCalIdx] = next->propositions[policyNo][currIdx][firstCalIdx] && next->propositions[policyNo][subIdx][freeVarCal(freeVarNo, i, dependencyTable[recordIdx].varIdx[1])];
-    //if (!next->propositions[policyNo][currIdx][firstCalIdx])
-    //  return 0;
   }
   return 0;
 }
@@ -688,12 +682,12 @@ int since_function(History *next, History *prev, int recordIdx){
   return 0;
 }
 
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
+// (*) Two following functions are mathematical functions used inside policy execution functions
+// --
 // (*) int freeVarCal(int freeVarNo, int loopNo, VariableIndex varIdx)
 // (*) int power(int number)
-// --
-// (*) These two functions are mathematics functions used inside policy execution functions
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 
 // Calculate the value of firstIndex, secondIndex
 int freeVarCal(int freeVarNo, int loopNo, VariableIndex varIdx){
@@ -727,11 +721,11 @@ int power(int number){
   return result;
 }
 
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 // [READ POLICY FUNCION]
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 // (*) This function is used to read the string from policy file and initialize variables for policy execution
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 
 int read_policy(char *inputString){
   // [START READING THE POLICY]
@@ -820,11 +814,11 @@ int read_policy_data(int *currentPos, char *inputString) {
   if (inputString[*currentPos] == '|')
     (*currentPos)++;
 
-  if (inputString[*currentPos] == '\0' || inputString[*currentPos] < 48 || inputString[*currentPos] > 57)
+  if (inputString[*currentPos] == '\0' || inputString[*currentPos] < '0' || inputString[*currentPos] > '9')
     return -1;
 
   while (inputString[*currentPos] != '\0' && inputString[*currentPos] != '|') {
-    result = result * 10 + inputString[*currentPos] - 48 ;
+    result = result * 10 + inputString[*currentPos] - '0' ;
     (*currentPos)++;
   }
 

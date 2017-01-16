@@ -18,7 +18,7 @@ void LogicDroid_unregisterMonitor(void);
 int LogicDroid_getCallRelationID(void);
 int LogicDroid_getInternetUID(void);
 
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 
 typedef struct tHistory {
   char ***propositions;
@@ -47,13 +47,13 @@ void History_insertEvent(History *h, int rel, int idx);
 char History_Process(History *next, History *prev);
 void History_Dispose(History *h);
 
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 // [POLICY DATA STRUCTURE DECLARATION]
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 // (*) The data structure of policy including:
 //     - Resource Allocation Table
 //     - Dependency Table
-//***********************************************************************************************************************************************//
+//*******************************************************************************************************************************//
 
 // Resource Allocation Table
 
@@ -72,21 +72,23 @@ typedef struct tResourceAllocationRecord{
 } ResourceAllocationRecord;
 
 // Dependency Table
-
-typedef struct tVariable{								// This data structure is used to present the Variable (i.e: constant : 0,1,... - variable: x,y,z,...)
+// This data structure is used to present the Variable (i.e: constant : 0,1,... - variable: x,y,z,...)
+typedef struct tVariable{
   //For Variable : type = 0 -> constant | 1 -> variable
   int type;
   int value;
 } Variable;
 
-typedef struct tVariableIndex{								// This data structure is used to present the Variable Index (i.e: [x * app_num + y] or [0], ...)
+// This data structure is used to present the Variable Index (i.e: [x * app_num + y] or [0], ...)
+typedef struct tVariableIndex{
   int varLength;
   Variable *var;
 } VariableIndex;
 
-typedef struct tDependencyTableRecord{							// This is the parameters to pass to policy execution functions
-  int id;										// This is the function pointer index : 0 -> 10 : exist_function to since_function
-  int freeVarNo;									// Number of kfree variables
+// The parameters to pass to policy execution functions
+typedef struct tDependencyTableRecord{
+  int id;						// Function pointer index : 0 -> 10 : exist_function to since_function
+  int freeVarNo;					// Number of kfree variables
   int varIdxLength;
   VariableIndex * varIdx;
   int fixIdxLength;
