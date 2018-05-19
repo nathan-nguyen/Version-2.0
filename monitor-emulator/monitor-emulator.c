@@ -24,7 +24,8 @@ static int app_num;
 static int currentHist = 0;
 //DEFINE_MUTEX(lock);
 
-int LogicDroid_getRelationName(int ID, char __user *relationName);
+//int LogicDroid_getRelationName(int ID, char __user *relationName);
+int LogicDroid_getRelationName(int ID, char *relationName);
 
 int LogicDroid_getCallRelationID(void) {
   return LogicDroid_CallRelationID;
@@ -46,7 +47,9 @@ int sys_LogicDroid_checkChain(int policyID, int caller, int target) {
   int result;
 
   struct timeval tv;
-  do_gettimeofday(&tv);
+
+// EMULATOR
+//  do_gettimeofday(&tv);
 
   if (notInitialized)
     return NO_MONITOR;
@@ -60,7 +63,7 @@ int sys_LogicDroid_checkChain(int policyID, int caller, int target) {
 }
 
 //asmlinkage int sys_LogicDroid_initializeMonitor(int __user *UID, int count) {
-int sys_LogicDroid_initializeMonitor(int __user *UID, int count) {
+int sys_LogicDroid_initializeMonitor(int *UID, int count) {
       	return LogicDroid_initializeMonitor(UID, count);
 }
 
@@ -74,7 +77,7 @@ int sys_LogicDroid_modifyStaticVariable(int policyID, int rel, int UID, char val
 }
 
 //asmlinkage int sys_LogicDroid_getRelationName(int ID, char __user *relationName) {
-int sys_LogicDroid_getRelationName(int ID, char __user *relationName) {
+int sys_LogicDroid_getRelationName(int ID, char *relationName) {
   return LogicDroid_getRelationName(ID, relationName);
 }
 
@@ -84,7 +87,7 @@ int sys_LogicDroid_isMonitorPresent(void) {
 }
 
 //asmlinkage void sys_LogicDroid_registerMonitor(char __user *inputString, char __user **relationsDataArray, int relationsDataSize, int policyID, int callRelationID) {
-void sys_LogicDroid_registerMonitor(char __user *inputString, char __user **relationsDataArray, int relationsDataSize, int policyID, int callRelationID) {
+void sys_LogicDroid_registerMonitor(char *inputString, char **relationsDataArray, int relationsDataSize, int policyID, int callRelationID) {
   LogicDroid_registerMonitor(inputString, relationsDataArray, relationsDataSize, policyID, callRelationID);
 }
 
@@ -99,7 +102,8 @@ int LogicDroid_renewMonitorVariable(int *UID, int varCount, char value, int rel)
   int mul = 1;
   int i = 0;
 
-  printk("\nRenew Monitor Variable\n");
+//  printk("\nRenew Monitor Variable\n");
+  printf("\nRenew Monitor Variable\n");
 
 //  mutex_lock(&lock);
   for (i = varCount - 1; i >= 0; mul *= app_num, i--) {
@@ -111,13 +115,18 @@ int LogicDroid_renewMonitorVariable(int *UID, int varCount, char value, int rel)
   return 0;
 } 
 
-int LogicDroid_initializeMonitor(int __user *UID, int appCount) {
+//int LogicDroid_initializeMonitor(int __user *UID, int appCount) {
+int LogicDroid_initializeMonitor(int *UID, int appCount) {
 
   // Copy the UID's
-  kfree(localUID);
+//  kfree(localUID);
+  free(localUID);
   localAppCount = appCount;
-  localUID = (int*) kmalloc(sizeof(int) * localAppCount, GFP_KERNEL);
-  copy_from_user(localUID, UID, sizeof(int) * localAppCount);
+//  localUID = (int*) kmalloc(sizeof(int) * localAppCount, GFP_KERNEL);
+  localUID = (int*) malloc(sizeof(int) * localAppCount);  
+
+// EMULATOR
+//  copy_from_user(localUID, UID, sizeof(int) * localAppCount);
 
   if (notInitialized) return NO_MONITOR;
 
@@ -149,7 +158,8 @@ int LogicDroid_checkEvent(int rel, int *UID, int varCount, long timestamp) {
   result = History_Process(hist[currentHist], hist[!currentHist]);
 
   if (varCount == 2)
-    printk("\nCall( %d , %d) - Result : %d\n", UID[0], UID[1], result);
+//    printk("\nCall( %d , %d) - Result : %d\n", UID[0], UID[1], result);
+    printf("\nCall( %d , %d) - Result : %d\n", UID[0], UID[1], result);
 
   // Revert the history before the event occurred if the event causes a violation of policy
   if (result)
@@ -160,7 +170,8 @@ int LogicDroid_checkEvent(int rel, int *UID, int varCount, long timestamp) {
   return result;
 }
 
-int LogicDroid_getRelationName(int ID, char __user *relationName) {
+//int LogicDroid_getRelationName(int ID, char __user *relationName) {
+int LogicDroid_getRelationName(int ID, char *relationName) {
   if (ID < 0 || ID >= relationSize) return OUT_OF_BOUND;
 
   if (notInitialized) return NO_MONITOR;
@@ -170,7 +181,8 @@ int LogicDroid_getRelationName(int ID, char __user *relationName) {
   return 1;
 }
 
-void LogicDroid_registerMonitor(char __user *inputString, char __user **relationsDataArray, int relationsDataSize, int policyID, int callRelationID) {
+//void LogicDroid_registerMonitor(char __user *inputString, char __user **relationsDataArray, int relationsDataSize, int policyID, int callRelationID) {
+void LogicDroid_registerMonitor(char *inputString, char **relationsDataArray, int relationsDataSize, int policyID, int callRelationID) {
   int i;
 
   // TODO: Consider the memory allocation of inputString
@@ -181,27 +193,38 @@ void LogicDroid_registerMonitor(char __user *inputString, char __user **relation
 
   notInitialized = 0;
 
-  printk("\nReset Monitor\n");
+//  printk("\nReset Monitor\n");
+  printf("\nReset Monitor\n");
 
-  printk(KERN_INFO "\n\nDetaching the policy from the monitor stub in kernel\n");
+//  printk(KERN_INFO "\n\nDetaching the policy from the monitor stub in kernel\n");
+  printf("\n\nDetaching the policy from the monitor stub in kernel\n");
 
   // Free relations
-  for (i = 0; i < relationSize; i++)
-    kfree(relations[i]);
-  kfree(relations);
+  for (i = 0; i < relationSize; i++){
+//    kfree(relations[i]);
+    free(relations[i]);
+  }
+//  kfree(relations);
+  free(relations);
 
-  printk("\ninputString : %s\n", inputString);
-  printk(KERN_INFO "Attaching the policy %d\n", policyID);
+//  printk("\ninputString : %s\n", inputString);
+  printf("\ninputString : %s\n", inputString);
+//  printk(KERN_INFO "Attaching the policy %d\n", policyID);
+  printf("Attaching the policy %d\n", policyID);
 
-  printk("\ncallRelationID = %d\n", callRelationID);
+//  printk("\ncallRelationID = %d\n", callRelationID);
+  printf("\ncallRelationID = %d\n", callRelationID);
 
   relationSize = relationsDataSize;
-  relations = (char**) kmalloc(sizeof(char*) * relationSize, GFP_KERNEL);
+//  relations = (char**) kmalloc(sizeof(char*) * relationSize, GFP_KERNEL);
+  relations = (char**) malloc(sizeof(char*) * relationSize);
 
   for (i = 0; i < relationSize; i++) {
-    relations[i] = (char*) kmalloc(sizeof(char*) * RELATION_MAX_LENGTH, GFP_KERNEL);
+//    relations[i] = (char*) kmalloc(sizeof(char*) * RELATION_MAX_LENGTH, GFP_KERNEL);
+    relations[i] = (char*) malloc(sizeof(char*) * RELATION_MAX_LENGTH);
     strcpy(relations[i], relationsDataArray[i]);
-    printk("\nrelations[%d] = %s\n", i, relations[i]);
+//    printk("\nrelations[%d] = %s\n", i, relations[i]);
+    printf("\nrelations[%d] = %s\n", i, relations[i]);
   }
 
   kernel_policyID = policyID;
@@ -224,7 +247,8 @@ void LogicDroid_registerMonitor(char __user *inputString, char __user **relation
 }
 
 void LogicDroid_unregisterMonitor() {
-  printk("\nUnregister Monitor\n");
+//  printk("\nUnregister Monitor\n");
+  printf("\nUnregister Monitor\n");
   notInitialized = 1;
 }
 //*******************************************************************************************************************************//
@@ -268,7 +292,8 @@ int LogicDroid_Module_initializeMonitor(int *UID, int appCount) {
   int i, j, k;
 
 //  mutex_lock(&lock);
-  printk("\n\nInitializing Monitor for %d applications\n", appCount);
+//  printk("\n\nInitializing Monitor for %d applications\n", appCount);
+  printf("\n\nInitializing Monitor for %d applications\n", appCount);
 
   mapping[ROOT_UID] = 0;
   mapping[INTERNET_UID] = 1;
@@ -280,12 +305,14 @@ int LogicDroid_Module_initializeMonitor(int *UID, int appCount) {
   mapping[IMEI_UID] = 7;
   app_num = appCount + 8;
 
-  staticAtoms = (char**) kmalloc(sizeof(char*) * numberOfStaticAtoms, GFP_KERNEL);
+//  staticAtoms = (char**) kmalloc(sizeof(char*) * numberOfStaticAtoms, GFP_KERNEL);
+  staticAtoms = (char**) malloc(sizeof(char*) * numberOfStaticAtoms);
   for (i = 0; i < numberOfStaticAtoms; i++) {
     // TODO: static atoms size app_num
     // All the static atoms is one dimension array because of the all relations are singular relation
     // Static atoms size need to be defined independently
-    staticAtoms[i] = (char*) kmalloc(sizeof(char) * app_num, GFP_KERNEL);
+//    staticAtoms[i] = (char*) kmalloc(sizeof(char) * app_num, GFP_KERNEL);
+    staticAtoms[i] = (char*) malloc(sizeof(char) * app_num);
     memset(staticAtoms[i], 0, sizeof(char) * app_num);
   }
 
@@ -304,7 +331,8 @@ int LogicDroid_Module_initializeMonitor(int *UID, int appCount) {
   }
 
   if (hist == NULL) {
-    hist = (History**) kmalloc(sizeof(History*) * 2, GFP_KERNEL);
+//    hist = (History**) kmalloc(sizeof(History*) * 2, GFP_KERNEL);
+    hist = (History**) malloc(sizeof(History*) * 2);
     hist[0] = NULL;
     hist[1] = NULL;
   }
@@ -328,34 +356,42 @@ int LogicDroid_Module_initializeMonitor(int *UID, int appCount) {
 History* History_Constructor(long timestamp) {
   int i;
 
-  History *retVal = (History*) kmalloc(sizeof(History), GFP_KERNEL);
+//  History *retVal = (History*) kmalloc(sizeof(History), GFP_KERNEL);
+  History *retVal = (History*) malloc(sizeof(History));
 
-  retVal->atoms = (char**) kmalloc(sizeof(char*) * numberOfAtoms, GFP_KERNEL);
+//  retVal->atoms = (char**) kmalloc(sizeof(char*) * numberOfAtoms, GFP_KERNEL);
+  retVal->atoms = (char**) malloc(sizeof(char*) * numberOfAtoms);
 
   for (i = 0; i < numberOfAtoms; i++) {
     if (atomList[i].type == 0)
       retVal->atoms[i] = staticAtoms[atomList[i].value];
     else
-      retVal->atoms[i] = (char*) kmalloc(sizeof(char) * power(atomList[i].value), GFP_KERNEL);
+//      retVal->atoms[i] = (char*) kmalloc(sizeof(char) * power(atomList[i].value), GFP_KERNEL);
+      retVal->atoms[i] = (char*) malloc(sizeof(char) * power(atomList[i].value));
   }
 
-  retVal->propositions = (char***) kmalloc(sizeof(char**) * numberOfFormulas, GFP_KERNEL);
+//  retVal->propositions = (char***) kmalloc(sizeof(char**) * numberOfFormulas, GFP_KERNEL);
+  retVal->propositions = (char***) malloc(sizeof(char**) * numberOfFormulas);
 
   for (i = 0; i < numberOfFormulas; i++) {
-    retVal->propositions[i] = (char**) kmalloc(sizeof(char*) * secondIndexSize[i], GFP_KERNEL);
+//    retVal->propositions[i] = (char**) kmalloc(sizeof(char*) * secondIndexSize[i], GFP_KERNEL);
+    retVal->propositions[i] = (char**) malloc(sizeof(char*) * secondIndexSize[i]);
   }
 
   for (i = 0; i < numberOfResourceAllocationRecords; i++) {
     if (resourceAllocationTable[i].type == 0)
-      retVal->propositions[resourceAllocationTable[i].firstIndex][resourceAllocationTable[i].secondIndex] = (char*) kmalloc(sizeof(char) * power(resourceAllocationTable[i].value), GFP_KERNEL);
+//      retVal->propositions[resourceAllocationTable[i].firstIndex][resourceAllocationTable[i].secondIndex] = (char*) kmalloc(sizeof(char) * power(resourceAllocationTable[i].value), GFP_KERNEL);
+      retVal->propositions[resourceAllocationTable[i].firstIndex][resourceAllocationTable[i].secondIndex] = (char*) malloc(sizeof(char) * power(resourceAllocationTable[i].value));
     else
       retVal->propositions[resourceAllocationTable[i].firstIndex][resourceAllocationTable[i].secondIndex] = retVal->atoms[resourceAllocationTable[i].value];
   }
 
   if (num_temp > 0) {
-    retVal->time_tag = (int**) kmalloc(sizeof(int*) * num_temp, GFP_KERNEL);
+//    retVal->time_tag = (int**) kmalloc(sizeof(int*) * num_temp, GFP_KERNEL);
+    retVal->time_tag = (int**) malloc(sizeof(int*) * num_temp);
     for (i = 0; i < num_temp; i++)
-      retVal->time_tag[i] = (int*) kmalloc(sizeof(int) * power(time_tag_size), GFP_KERNEL) ;
+//      retVal->time_tag[i] = (int*) kmalloc(sizeof(int) * power(time_tag_size), GFP_KERNEL) ;
+      retVal->time_tag[i] = (int*) malloc(sizeof(int) * power(time_tag_size)) ;
   }
   retVal->timestamp = timestamp;
 
@@ -396,11 +432,15 @@ void History_Dispose(History *h) {
 
   // Clean propositions
   for (i = 0; i < numberOfFormulas; i++) {
-    for (j = 0; j < secondIndexSize[i]; j++)
-      kfree(h->propositions[i][j]);
-    kfree(h->propositions[i]);
+    for (j = 0; j < secondIndexSize[i]; j++){
+//      kfree(h->propositions[i][j]);
+      free(h->propositions[i][j]);
+    }
+//    kfree(h->propositions[i]);
+    free(h->propositions[i]);
   }
-  kfree(h->propositions);
+//  kfree(h->propositions);
+  free(h->propositions);
 
   for (i = 0; i < numberOfAtoms; i++){
     if (atomList[i].type == 0)
@@ -409,19 +449,25 @@ void History_Dispose(History *h) {
 
   // Clean atoms
   for (i = 0; i < numberOfAtoms; i++) {
-    kfree(h->atoms[i]);
+//    kfree(h->atoms[i]);
+    free(h->atoms[i]);
   }
-  kfree(h->atoms);
+//  kfree(h->atoms);
+  free(h->atoms);
 
   if (num_temp > 0) {
     // Clean temporal metric
-    for (i = 0; i < num_temp; i++)
-      kfree(h->time_tag[i]);
-    kfree(h->time_tag);
+    for (i = 0; i < num_temp; i++){
+//      kfree(h->time_tag[i]);
+      free(h->time_tag[i]);
+    }
+//    kfree(h->time_tag);
+    free(h->time_tag);
   }
 
   // Finally kfree the history reference
-  kfree(h);
+//  kfree(h);
+  free(h);
 }
 
 // This function is used to execute the policy
@@ -438,23 +484,33 @@ void policy_data_cleanup(void) {
   int i, j;
 
   for (i = 0; i < numberOfStaticAtoms; i++) {
-    kfree(staticAtoms[i]);
+//    kfree(staticAtoms[i]);
+    free(staticAtoms[i]);
   }
-  kfree(staticAtoms);
+//  kfree(staticAtoms);
+  free(staticAtoms);
 
   //kfree Dependency Table and Resource Allocation Table
 
   for (i = 0; i < dependencyTableRecordNo; i++) {
-    kfree(dependencyTable[i].fixIdx);  
-    for (j = 0 ; j < dependencyTable[i].varIdxLength; j ++)
-      kfree(dependencyTable[i].varIdx[j].var);
-    kfree(dependencyTable[i].varIdx);
+//    kfree(dependencyTable[i].fixIdx);  
+    free(dependencyTable[i].fixIdx);  
+    for (j = 0 ; j < dependencyTable[i].varIdxLength; j ++){
+//      kfree(dependencyTable[i].varIdx[j].var);
+      free(dependencyTable[i].varIdx[j].var);
+    }
+//    kfree(dependencyTable[i].varIdx);
+    free(dependencyTable[i].varIdx);
   }
-  kfree(dependencyTable);
+//  kfree(dependencyTable);
+  free(dependencyTable);
 
-  kfree(resourceAllocationTable);
-  kfree(secondIndexSize);
-  kfree(atomList);
+//  kfree(resourceAllocationTable);
+  free(resourceAllocationTable);
+//  kfree(secondIndexSize);
+  free(secondIndexSize);
+//  kfree(atomList);
+  free(atomList);
 }
 
 //*******************************************************************************************************************************//
@@ -749,7 +805,8 @@ int read_policy(char *inputString){
   time_tag_size = read_policy_data(&currentPos, inputString);
   numberOfAtoms = read_policy_data(&currentPos, inputString);
 
-  atomList = (Atom*) kmalloc(sizeof(Atom) * numberOfAtoms, GFP_KERNEL);
+//  atomList = (Atom*) kmalloc(sizeof(Atom) * numberOfAtoms, GFP_KERNEL);
+  atomList = (Atom*) malloc(sizeof(Atom) * numberOfAtoms);
   for (i = 0; i < numberOfAtoms; i++) {
     atomList[i].type = read_policy_data(&currentPos, inputString);
     // atomList[i].value is the varCount for dynamic atom
@@ -757,13 +814,15 @@ int read_policy(char *inputString){
   }
 
   numberOfFormulas = read_policy_data(&currentPos, inputString);
-  secondIndexSize = (int*) kmalloc (sizeof(int) * numberOfFormulas, GFP_KERNEL);
+//  secondIndexSize = (int*) kmalloc (sizeof(int) * numberOfFormulas, GFP_KERNEL);
+  secondIndexSize = (int*) malloc (sizeof(int) * numberOfFormulas);
 
   for (i = 0; i < numberOfFormulas; i++)
     secondIndexSize[i] = read_policy_data(&currentPos, inputString);
 
   numberOfResourceAllocationRecords = read_policy_data(&currentPos, inputString);
-  resourceAllocationTable = (ResourceAllocationRecord*) kmalloc(sizeof(ResourceAllocationRecord)* numberOfResourceAllocationRecords, GFP_KERNEL);
+//  resourceAllocationTable = (ResourceAllocationRecord*) kmalloc(sizeof(ResourceAllocationRecord)* numberOfResourceAllocationRecords, GFP_KERNEL);
+  resourceAllocationTable = (ResourceAllocationRecord*) malloc(sizeof(ResourceAllocationRecord)* numberOfResourceAllocationRecords);
   
   for (i = 0; i < numberOfResourceAllocationRecords; i++) {
     resourceAllocationTable[i].type = read_policy_data(&currentPos, inputString);
@@ -777,17 +836,20 @@ int read_policy(char *inputString){
   // Start reading the dependency table
 
   dependencyTableRecordNo = read_policy_data(&currentPos, inputString);
-  dependencyTable = (DependencyTableRecord*) kmalloc (sizeof(DependencyTableRecord) * dependencyTableRecordNo, GFP_KERNEL);
+//  dependencyTable = (DependencyTableRecord*) kmalloc (sizeof(DependencyTableRecord) * dependencyTableRecordNo, GFP_KERNEL);
+  dependencyTable = (DependencyTableRecord*) malloc (sizeof(DependencyTableRecord) * dependencyTableRecordNo);
   for (i = 0; i < dependencyTableRecordNo; i++){
     dependencyTable[i].id = read_policy_data(&currentPos, inputString);
     dependencyTable[i].freeVarNo = read_policy_data(&currentPos, inputString);
     varIdxLength = read_policy_data(&currentPos, inputString);
     dependencyTable[i].varIdxLength = varIdxLength;
-    dependencyTable[i].varIdx = (VariableIndex*) kmalloc (sizeof(VariableIndex) * varIdxLength, GFP_KERNEL);
+//    dependencyTable[i].varIdx = (VariableIndex*) kmalloc (sizeof(VariableIndex) * varIdxLength, GFP_KERNEL);
+    dependencyTable[i].varIdx = (VariableIndex*) malloc (sizeof(VariableIndex) * varIdxLength);
     for (j = 0; j < varIdxLength; j++){
       varLength = read_policy_data(&currentPos, inputString);
       dependencyTable[i].varIdx[j].varLength = varLength;
-      dependencyTable[i].varIdx[j].var = (Variable*) kmalloc(sizeof(Variable)* varLength, GFP_KERNEL);
+//      dependencyTable[i].varIdx[j].var = (Variable*) kmalloc(sizeof(Variable)* varLength, GFP_KERNEL);
+      dependencyTable[i].varIdx[j].var = (Variable*) malloc(sizeof(Variable)* varLength);
       for (k = 0; k < varLength; k++){
         dependencyTable[i].varIdx[j].var[k].type = read_policy_data(&currentPos, inputString);
         dependencyTable[i].varIdx[j].var[k].value = read_policy_data(&currentPos, inputString);
@@ -795,7 +857,8 @@ int read_policy(char *inputString){
     }
     fixIdxLength = read_policy_data(&currentPos, inputString);
     dependencyTable[i].fixIdxLength = fixIdxLength;
-    dependencyTable[i].fixIdx = (int*) kmalloc (sizeof(int) * fixIdxLength, GFP_KERNEL);
+//    dependencyTable[i].fixIdx = (int*) kmalloc (sizeof(int) * fixIdxLength, GFP_KERNEL);
+    dependencyTable[i].fixIdx = (int*) malloc (sizeof(int) * fixIdxLength);
     for (j = 0; j < fixIdxLength; j++)
       dependencyTable[i].fixIdx[j] = read_policy_data(&currentPos, inputString);
   }
@@ -833,7 +896,8 @@ int read_policy_data(int *currentPos, char *inputString) {
   return result;
 }
 
-#include <stdio.h>
+
+
 
 int main( int argc, const char* argv[] ) {
 	printf("Monitor emulator\n");
