@@ -1,3 +1,6 @@
+#ifndef EMULATOR_H_INCLUDED
+#define EMULATOR_H_INCLUDED
+
 #include "Monitor.h"
 #include "monitor-emulator.h"
 //#include<linux/linkage.h> 	// To handle system call interface
@@ -900,3 +903,4 @@ int read_policy_data(int *currentPos, char *inputString) {
   return result;
 }
 
+#endif
