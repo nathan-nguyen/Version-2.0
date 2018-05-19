@@ -482,7 +482,11 @@ char History_Process(History *next, History *prev) {
   int recordIdx;
 
   for (recordIdx = 0; recordIdx < dependencyTableRecordNo; recordIdx++) { 
+    clock_t begin = clock();
     (*functionPointer[dependencyTable[recordIdx].id])(next, prev, recordIdx);
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf("\nTime: %d %f", dependencyTable[recordIdx].id, time_spent);
   }
   return next->propositions[0][0][0];
 }
