@@ -832,3 +832,9 @@ int read_policy_data(int *currentPos, char *inputString) {
 
   return result;
 }
+
+#include <stdio.h>
+
+int main( int argc, const char* argv[] ) {
+	printf("Monitor emulator\n");
+}
