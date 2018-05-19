@@ -48,8 +48,8 @@ int sys_LogicDroid_checkChain(int policyID, int caller, int target) {
 
   struct timeval tv;
 
-// EMULATOR
 //  do_gettimeofday(&tv);
+  gettimeofday(&tv, NULL);
 
   if (notInitialized)
     return NO_MONITOR;
@@ -125,8 +125,8 @@ int LogicDroid_initializeMonitor(int *UID, int appCount) {
 //  localUID = (int*) kmalloc(sizeof(int) * localAppCount, GFP_KERNEL);
   localUID = (int*) malloc(sizeof(int) * localAppCount);  
 
-// EMULATOR
 //  copy_from_user(localUID, UID, sizeof(int) * localAppCount);
+  emu_copy_from_user(localUID, UID, sizeof(int) * localAppCount);
 
   if (notInitialized) return NO_MONITOR;
 

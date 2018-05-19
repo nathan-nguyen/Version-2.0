@@ -5,5 +5,9 @@
 #include <sys/time.h>
 #include <stdio.h>
 
+void emu_copy_from_user(int * localUID, int * UID, unsigned long n){
+	memcpy(localUID, UID, n);
+}
+
 #endif
 
